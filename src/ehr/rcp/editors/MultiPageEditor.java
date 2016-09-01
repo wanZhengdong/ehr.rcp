@@ -33,6 +33,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
 import ehr.rcp.provider.CommonTreeContentProvier;
+import ehr.rcp.provider.CommonTreeLabelProvier;
 
 import org.eclipse.ui.ide.IDE;
 
@@ -71,12 +72,13 @@ public class MultiPageEditor extends MultiPageEditorPart implements IResourceCha
     /**
      * Creates page 0 of the multi-page editor, which contains a text editor.
      */
-    void createPage0()
+    void createCommonPage()
     {
         Composite commonComposite = new Composite(getContainer(), SWT.NONE);
         commonComposite.setSize(800, 600);
         commonTree = new TreeViewer(commonComposite, SWT.BORDER | SWT.FULL_SELECTION);
         commonTree.setContentProvider(new CommonTreeContentProvier());
+        commonTree.setLabelProvider(new CommonTreeLabelProvier());
         commonTree.setInput(getEditorInput());
         commonTree.getTree().setSize(800, 600);
         int index = addPage(commonComposite);
@@ -86,30 +88,13 @@ public class MultiPageEditor extends MultiPageEditorPart implements IResourceCha
     /**
      * Creates page 1 of the multi-page editor, which allows you to change the font used in page 2.
      */
-    void createPage1()
+    void createConfigPage()
     {
         
         Composite composite = new Composite(getContainer(), SWT.NONE);
-        GridLayout layout = new GridLayout();
-        composite.setLayout(layout);
-        layout.numColumns = 2;
-        
-        Button fontButton = new Button(composite, SWT.NONE);
-        GridData gd = new GridData(GridData.BEGINNING);
-        gd.horizontalSpan = 2;
-        fontButton.setLayoutData(gd);
-        fontButton.setText("Change Font...");
-        
-        fontButton.addSelectionListener(new SelectionAdapter()
-        {
-            public void widgetSelected(SelectionEvent event)
-            {
-                setFont();
-            }
-        });
         
         int index = addPage(composite);
-        setPageText(index, "Properties");
+        setPageText(index, "Config");
     }
     
     /**
@@ -132,7 +117,8 @@ public class MultiPageEditor extends MultiPageEditorPart implements IResourceCha
      */
     protected void createPages()
     {
-        createPage0();
+        createCommonPage();
+        createConfigPage();
     }
     
     /**
